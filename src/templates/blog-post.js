@@ -1,6 +1,11 @@
 import React from "react"
 import { Link, graphql } from "gatsby"
 
+import unified from 'unified'
+import markdown from 'remark-parse'
+import html from 'remark-html'
+// import Img from 'gatsby-image'
+
 import Bio from "../components/bio"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -8,17 +13,20 @@ import { rhythm, scale } from "../utils/typography"
 
 class BlogPostTemplate extends React.Component {
   render() {
-    const post = this.props.data.markdownRemark
+    const post = this.props.data.airtable.data
     const siteTitle = this.props.data.site.siteMetadata.title
     const { previous, next } = this.props.pageContext
 
     return (
       <Layout location={this.props.location} title={siteTitle}>
         <SEO
-          title={post.frontmatter.title}
-          description={post.frontmatter.description || post.excerpt}
+          title={post.title}
+          description={post.description || String(unified()
+            .use(markdown)
+            .use(html)
+            .processSync(post.PostMarkdown.split(/\s+/).slice(0, 35).join(" ")))}
         />
-        <h1>{post.frontmatter.title}</h1>
+        <h1>{post.title}</h1>
         <p
           style={{
             ...scale(-1 / 5),
@@ -27,9 +35,17 @@ class BlogPostTemplate extends React.Component {
             marginTop: rhythm(-1),
           }}
         >
-          {post.frontmatter.date}
+          {post.date}
         </p>
-        <div dangerouslySetInnerHTML={{ __html: post.html }} />
+
+        <img src={post.image[0].url} alt={post.title} width={600} style={{display: "block", margin: "20px auto"}}/>
+        <div dangerouslySetInnerHTML={{ 
+          __html: unified()
+            .use(markdown)
+            .use(html)
+            .processSync(post.PostMarkdown) 
+          }} 
+        />
         <hr
           style={{
             marginBottom: rhythm(1),
@@ -48,15 +64,15 @@ class BlogPostTemplate extends React.Component {
         >
           <li>
             {previous && (
-              <Link to={previous.fields.slug} rel="prev">
-                ← {previous.frontmatter.title}
+              <Link to={previous.data.slug} rel="prev">
+                ← {previous.data.title}
               </Link>
             )}
           </li>
           <li>
             {next && (
-              <Link to={next.fields.slug} rel="next">
-                {next.frontmatter.title} →
+              <Link to={next.data.slug} rel="next">
+                {next.data.title} →
               </Link>
             )}
           </li>
@@ -76,14 +92,16 @@ export const pageQuery = graphql`
         author
       }
     }
-    markdownRemark(fields: { slug: { eq: $slug } }) {
-      id
-      excerpt(pruneLength: 160)
-      html
-      frontmatter {
+    airtable(data: {slug: {eq: $slug}}) {
+      data {
+        slug
         title
-        date(formatString: "MMMM DD, YYYY")
-        description
+        author
+        date
+        image {
+          url
+        }
+        PostMarkdown
       }
     }
   }

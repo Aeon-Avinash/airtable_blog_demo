@@ -1,5 +1,4 @@
 const path = require(`path`)
-const { createFilePath } = require(`gatsby-source-filesystem`)
 
 exports.createPages = ({ graphql, actions }) => {
   const { createPage } = actions
@@ -8,17 +7,21 @@ exports.createPages = ({ graphql, actions }) => {
   return graphql(
     `
       {
-        allMarkdownRemark(
-          sort: { fields: [frontmatter___date], order: DESC }
-          limit: 1000
-        ) {
+        allAirtable(filter: {data: {publishingStatus: {eq: "Publish"}}}) {
+          totalCount
           edges {
             node {
-              fields {
-                slug
-              }
-              frontmatter {
+              table
+              data {
                 title
+                author
+                slug
+                date
+                image {
+                  url
+                }
+                PostMarkdown
+                publishingStatus
               }
             }
           }
@@ -31,17 +34,18 @@ exports.createPages = ({ graphql, actions }) => {
     }
 
     // Create blog posts pages.
-    const posts = result.data.allMarkdownRemark.edges
+    const posts = result.data.allAirtable.edges
 
-    posts.forEach((post, index) => {
+    posts.forEach(({node}, index) => {
+      const post = node.data
       const previous = index === posts.length - 1 ? null : posts[index + 1].node
       const next = index === 0 ? null : posts[index - 1].node
 
       createPage({
-        path: post.node.fields.slug,
+        path: `${post.slug}`,
         component: blogPost,
         context: {
-          slug: post.node.fields.slug,
+          slug: post.slug,
           previous,
           next,
         },
@@ -50,17 +54,4 @@ exports.createPages = ({ graphql, actions }) => {
 
     return null
   })
-}
-
-exports.onCreateNode = ({ node, actions, getNode }) => {
-  const { createNodeField } = actions
-
-  if (node.internal.type === `MarkdownRemark`) {
-    const value = createFilePath({ node, getNode })
-    createNodeField({
-      name: `slug`,
-      node,
-      value,
-    })
-  }
 }

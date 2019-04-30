@@ -1,11 +1,19 @@
+const dotenv = require("dotenv")
+
+if (process.env.ENVIRONMENT !== "production") {
+  dotenv.config()
+}
+
+const { AIRTABLE_API_KEY, BLOG_BASE_ID } = process.env
+
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
-    author: `Kyle Mathews`,
-    description: `A starter blog demonstrating what Gatsby can do.`,
-    siteUrl: `https://gatsby-starter-blog-demo.netlify.com/`,
+    title: `Airtable Blog`,
+    author: `Aeon Avinash`,
+    description: `A starter blog demonstrating what Gatsby and Airtable can do.`,
+    siteUrl: `https://airtable-blog-demo.netlify.com/`,
     social: {
-      twitter: `kylemathews`,
+      twitter: `aeon_b_avinash`,
     },
   },
   plugins: [
@@ -72,6 +80,20 @@ module.exports = {
       resolve: `gatsby-plugin-typography`,
       options: {
         pathToConfigModule: `src/utils/typography`,
+      },
+    },
+    {
+      resolve: "gatsby-source-airtable",
+      options: {
+        apiKey: AIRTABLE_API_KEY,
+        tables: [
+          {
+            baseId: BLOG_BASE_ID,
+            tableName: "BLOGPOSTS_CMS",
+            // tableView: "Publish",
+            // queryName: "",
+          },
+        ],
       },
     },
   ],

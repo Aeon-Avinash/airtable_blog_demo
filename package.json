@@ -1,13 +1,17 @@
 {
   "name": "gatsby-starter-blog",
   "private": true,
-  "description": "A starter for a blog powered by Gatsby and Markdown",
+  "description": "A starter for a blog powered by Gatsby and Airtable",
   "version": "0.1.0",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "bugs": {
     "url": "https://github.com/gatsbyjs/gatsby/issues"
   },
   "dependencies": {
+    "airtable": "^0.5.10",
+    "axios": "^0.18.0",
+    "dotenv": "^7.0.0",
+    "fs": "0.0.1-security",
     "gatsby": "^2.3.32",
     "gatsby-image": "^2.0.40",
     "gatsby-plugin-feed": "^2.1.1",
@@ -22,18 +26,26 @@
     "gatsby-remark-prismjs": "^3.2.8",
     "gatsby-remark-responsive-iframe": "^2.1.1",
     "gatsby-remark-smartypants": "^2.0.9",
+    "gatsby-source-airtable": "^2.0.8",
     "gatsby-source-filesystem": "^2.0.32",
     "gatsby-transformer-remark": "^2.3.12",
     "gatsby-transformer-sharp": "^2.1.18",
+    "hast-util-to-html": "^5.0.0",
+    "hastscript": "^5.0.0",
     "prismjs": "^1.16.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.0",
     "react-typography": "^0.16.19",
+    "rehype-stringify": "^5.0.0",
+    "remark-html": "^9.0.0",
+    "remark-parse": "^6.0.3",
+    "remark-rehype": "^4.0.0",
     "typeface-merriweather": "0.0.72",
     "typeface-montserrat": "0.0.54",
     "typography": "^0.16.19",
-    "typography-theme-wordpress-2016": "^0.16.19"
+    "typography-theme-wordpress-2016": "^0.16.19",
+    "unified": "^7.1.0"
   },
   "devDependencies": {
     "prettier": "^1.17.0"
