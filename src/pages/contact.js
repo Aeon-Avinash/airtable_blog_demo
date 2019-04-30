@@ -51,6 +51,9 @@ class Contact extends React.Component {
           }
           console.log(record.getId())
           this.setState({
+            nameairgats: "",
+            emailairgats: "",
+            notesairgats: "",
             name: "",
             email: "",
             notes: "",
